@@ -1,4 +1,6 @@
-This is an anonymous submission of the tokenization tool corresponding to the manuscript: `MaxMatch-Dropout: Subword Regularization for WordPiece`.
+# MaxMatch-Dropout
+
+This is official implementation of `MaxMatch-Dropout: Subword Regularization for WordPiece`, which was accepted to appear in COLING2022.
 Because the main focus of this paper is to introduce a new subword regularization method named MaxMatch-Dropout, we provide only the tokenizer in this supplementary material.
 
 You can check the tokenization by MaxMatch-Dropout just run the following script with Python3.
