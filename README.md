@@ -75,3 +75,41 @@ purterbed tokenization with MaxMatch-Dropout:
 >>> ['a', 'b', 'c', 'd']
 >>> ['a', 'b', 'c', 'd'] 
 ```
+
+## Usage notes for BertTokenizer(Fast)
+
+You can set the vocabulary of `BertTokenizer` or `BertTokenizerFast` as the following:
+
+```
+>>> from transformers import BertTokenizer
+>>> import maxMatchTokenizer
+>>> tknzr = BertTokenizer.from_pretrained('bert-base-cased')
+>>> mmt = maxMatchTokenizer.MaxMatchTokenizer()
+>>> mmt.loadBertTokenizer(tknzr)
+Using bos_token, but it is not set yet.
+Using eos_token, but it is not set yet.
+```
+
+This method does NOT load the pre-processing part of `BertTokenizer` or `BertTokenizerFast`.
+Thereby, the tokenization of `mmt` results in the different one from the original tokenization of `tknzr`:
+
+```
+>>> tknzr.tokenize('Hello, world!')
+['Hello', ',', 'world', '!']
+>>> mmt.tokenize('Hello, world!')
+['Hello', '##,', 'world', '##!']
+```
+
+To avoid this problem, **you have to input pre-processed texts to `mmt`**.
+For the case of `bert-base-cased`, the following script using `base_tokenizer` makes `mmt` yield the same tokenization as the original.
+
+```
+>>> tmp = ' '.join(tknzr.basic_tokenizer.tokenize('Hello, world!'))
+>>> tmp
+'Hello , world !'
+>>> mmt.tokenize(tmp)
+['Hello', ',', 'world', '!']
+```
+
+The way of pre-processing varies depending on models, so currently this script does not include these pre-processing.
+**When using `BertTokenizer` or `BertTokenizerFast`, please check whether the tokenization of `MaxMatchTokenizer` matches the original tokenization.**
