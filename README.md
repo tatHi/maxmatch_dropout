@@ -1,6 +1,6 @@
 # MaxMatch-Dropout
 
-This is official implementation of `MaxMatch-Dropout: Subword Regularization for WordPiece`, which was accepted to appear in COLING2022.
+This is official implementation of MaxMatch-Dropout: Subword Regularization for WordPiece ([arXiv](https://arxiv.org/abs/2209.04126)), which was accepted to appear in COLING2022.
 Because the main focus of this paper is to introduce a new subword regularization method named MaxMatch-Dropout, we provide only the tokenizer in this supplementary material.
 
 You can check the tokenization by MaxMatch-Dropout just run the following script with Python3.
@@ -78,7 +78,7 @@ purterbed tokenization with MaxMatch-Dropout:
 
 ## Usage notes for BertTokenizer(Fast)
 
-You can set the vocabulary of `BertTokenizer` or `BertTokenizerFast` as the following:
+You can set the vocabulary of `BertTokenizer` or `BertTokenizerFast` as the following (in the case of using `bert-base-cased`):
 
 ```
 >>> from transformers import BertTokenizer
@@ -101,7 +101,7 @@ Thereby, the tokenization of `mmt` results in the different one from the origina
 ```
 
 To avoid this problem, **you have to input pre-processed texts to `mmt`**.
-For the case of `bert-base-cased`, the following script using `base_tokenizer` makes `mmt` yield the same tokenization as the original.
+For the case of `bert-base-cased`, the following script using `basic_tokenizer` makes `mmt` yield the same tokenization as the original.
 
 ```
 >>> tmp = ' '.join(tknzr.basic_tokenizer.tokenize('Hello, world!'))
@@ -113,3 +113,13 @@ For the case of `bert-base-cased`, the following script using `base_tokenizer` m
 
 The way of pre-processing varies depending on models, so currently this script does not include these pre-processing.
 **When using `BertTokenizer` or `BertTokenizerFast`, please check whether the tokenization of `MaxMatchTokenizer` matches the original tokenization.**
+
+If you do not have time to inspect the detailed pre-processing of the original tokenizer, you can obtain the pre-processed text in a naive but inefficient way: tokenizing and detokenizing the raw text.
+
+```
+>>> raw = 'hello, wordpiece!'
+>>> tknzr.tokenize(raw)
+['hello', ',', 'word', '##piece', '!']
+>>> ' '.join(tknzr.tokenize(raw)).replace(' ##', '')
+'hello , wordpiece !'
+```
