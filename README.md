@@ -1,7 +1,7 @@
 # MaxMatch-Dropout
 
 This is official implementation of MaxMatch-Dropout: Subword Regularization for WordPiece ([arXiv](https://arxiv.org/abs/2209.04126)), which was accepted to appear in COLING2022.
-Because the main focus of this paper is to introduce a new subword regularization method named MaxMatch-Dropout, we provide only the tokenizer in this supplementary material.
+Because the main focus of this paper is to introduce a new subword regularization method named MaxMatch-Dropout, we provide only the tokenizer in this repository.
 
 You can check the tokenization by MaxMatch-Dropout just run the following script with Python3.
 The results depend on the random seed because of the probabilistic action in the proposed method.
