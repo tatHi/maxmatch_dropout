@@ -4,6 +4,7 @@ class MaxMatchTokenizer:
     def __init__(self, vocab=None, midPref='##', headPref=''):
         self.midPref = midPref
         self.headPref = headPref
+        self.doNaivePreproc = False
         if vocab:
             self.__build(vocab)
 
@@ -51,6 +52,8 @@ class MaxMatchTokenizer:
     def tokenize(self, text, p=0.0):
         if type(text)==list:
             return [self.tokenize(line, p) for line in text]
+        if self.doNaivePreproc:
+            text = self.naivePreproc(text)
         return [subword for word in text.split() for subword in self.tokenizeWord(word, p)]
 
     def encode(self, text, p=0.0):
@@ -78,8 +81,11 @@ class MaxMatchTokenizer:
         self.sepToken   = '[SEP]'
         self.sepTokenId = self.word2id[self.sepToken]
  
+    def loadBertTokenizer(self, bertTokenizer, doNaivePreproc=False):
+        if doNaivePreproc:
+            self.doNaivePreproc = doNaivePreproc
+            self.bertTokenizer = bertTokenizer
 
-    def loadBertTokenizer(self, bertTokenizer):
         self.midPref = '##'
         self.vocab = set()
         self.word2id = {}
@@ -102,7 +108,10 @@ class MaxMatchTokenizer:
         self.bosTokenId = bertTokenizer.bos_token_id
         self.eosToken   = bertTokenizer.eos_token
         self.eosTokenId = bertTokenizer.eos_token_id
-    
+
+    def naivePreproc(self, text):
+        return ' '.join(self.bertTokenizer.tokenize(text)).replace(' '+self.midPref, '')
+
 if __name__=='__main__':
     vocab = '▁a ▁b ▁c abc a b c C S'.split()
     sent = 'aabcb cda'
